@@ -20,11 +20,41 @@ def get_token():
         "Content-Type"  : "application/x-www-form-urlencoded"
     }
 
-    data = {"grant_type" : "client_creadentials"}
+    data = {"grant_type" : "client_credentials"}
     result = post(url, headers = headers, data =data)
-    json_result = json.loads(result.content())
+    json_result = json.loads(result.content)
     token = json_result["access_token"]
     return token
 
 t = get_token()
 print(t)
+
+# So far, 
+'''
+    we imported 
+        dotenv to get data from .env file
+        os to access the env file
+        base64 to convert request into bytes
+        requests to request to the server
+        json to access the json response from server
+        
+    then, 
+        we loaded .env file
+        and created  variables to store client_id and secret
+    
+    then created the function get_token()
+        in this function,
+            we first created auth_string using .env variables(client credentials)
+            then encoded it to bytes
+            then converted the encoded bytes back to string 
+            THE ENCRYPTION DONE ✅
+        
+            then provided url endpoint to send request and headeres of the request and data containing "client_creadentials" as "grant_type"
+
+            then a post request is sent to the (url) with headers=headers and data=data
+            
+            then json_result stored the result.content
+
+            then accessed the token and returned it.
+            
+'''
