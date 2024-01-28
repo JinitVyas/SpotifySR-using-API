@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 import base64
+import requests
 from requests import post
 import json
 
@@ -57,19 +58,32 @@ print(t)
 
             then accessed the token and returned it.
 '''
-song_name = input("Enter a song name")
 
-def get_song_details():
-    search_url = "https://api.spotify.com/v1/tracks/"
+def get_song_details(song_name, access_token):
+    search_url = "https://api.spotify.com/v1/search/"
     parameters_of_query_string = {
         'q': song_name,
         'type': 'track',
         'limit': 1 
     }
-    headeres = {'Authorization': f'Bearer {access_token}'}
-    result = requests.get(search_url)
+    headers = {'Authorization': f'Bearer {access_token}'}
+    result = requests.get(search_url, parameters_of_query_string, headers=headers)
+    
+    if result.status_code == 200:
+        track_details = result.json()
+        t_id = track_details["tracks"]["items"][0]["id"]
+        t_name = track_details["tracks"]["items"][0]["name"]
+        artists = track_details["tracks"]["items"][0]["artists"]
+        
+        print(f"\n\n{t_id}\n<'{t_name}'> by <'{artists[0]['name']}'>")
+        return t_id
+    else:
+        print(f"****************************error: {result} ****************************")
 
-def get_features(track_id, token):
+song_name = input("Enter a song name: ")
+t_id = get_song_details(song_name, t)
+
+def get_features(track_id, access_token):
     
     # Preparing the request to send for audio features
     features_url = f'https://api.spotify.com/v1/audio-features/{track_id}'
@@ -80,5 +94,8 @@ def get_features(track_id, token):
     
     if response.status_code == 200:
         print("YOOOOOO")
+        audio_features = response.json()
+        print( audio_features)
     else:
         print("NOOOOOOOO")
+get_features(t_id, t)
