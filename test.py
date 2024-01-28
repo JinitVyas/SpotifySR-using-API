@@ -56,5 +56,29 @@ print(t)
             then json_result stored the result.content
 
             then accessed the token and returned it.
-            
 '''
+song_name = input("Enter a song name")
+
+def get_song_details():
+    search_url = "https://api.spotify.com/v1/tracks/"
+    parameters_of_query_string = {
+        'q': song_name,
+        'type': 'track',
+        'limit': 1 
+    }
+    headeres = {'Authorization': f'Bearer {access_token}'}
+    result = requests.get(search_url)
+
+def get_features(track_id, token):
+    
+    # Preparing the request to send for audio features
+    features_url = f'https://api.spotify.com/v1/audio-features/{track_id}'
+    headers = {'Authorization': f'Bearer {access_token}'}
+    
+    # Sending a request and getting a response
+    response = requests.get(features_url, headers=headers)
+    
+    if response.status_code == 200:
+        print("YOOOOOO")
+    else:
+        print("NOOOOOOOO")
